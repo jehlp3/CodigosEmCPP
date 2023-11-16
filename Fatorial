@@ -1,0 +1,21 @@
+#include <iostream>
+#include <stdio.h>
+
+int fat (int n)
+{
+	if(n !=1)
+		return n* fat(n-1);
+	else
+		return 1;
+	
+}
+int main(){
+	
+int n;
+printf("Digite o valor de n: ");
+scanf("%d", &n);  
+int resultado = fat(n);
+printf("O fatorial de %d é: %d\n", n, resultado);
+
+return 0;
+}
