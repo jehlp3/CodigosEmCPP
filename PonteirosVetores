@@ -1,0 +1,47 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <locale.h>
+#include <iostream>
+#define TAM 2
+
+using namespace std;
+
+struct funcionario{
+    char nome[40];
+    struct{
+        int dia;
+        int mes;
+        int ano;
+    } dtNasc;
+    char depto[20];
+    float salario;
+};
+
+int main(){    
+
+    setlocale(LC_ALL, "portuguese");
+    funcionario func[TAM];
+    int i;
+
+    for(i = 0; i < TAM; i++){
+        cout << "\nInforme o nome do funcionário: ";
+        cin >> func[i].nome;
+        cout << "Informe a data de nascimento dd mm aaaa: ";
+        cin >> func[i].dtNasc.dia >> func[i].dtNasc.mes >> func[i].dtNasc.ano;
+        cout << "Informe o seu departamento: ";
+        cin >> func[i].depto;
+        cout << "Informe seu salário: ";
+        cin >> func[i].salario;
+    }
+
+
+    for(i = 0; i < TAM; i++){
+        cout << "\n\nDados do funcionário " << i+1 << ":";
+        cout << "\nNome: " << func[i].nome;
+        cout << "\nData de nascimento: " << func[i].dtNasc.dia << "/" << func[i].dtNasc.mes << "/" << func[i].dtNasc.ano;
+        cout << "\nDepartamento: " << func[i].depto;
+        cout << "\nSalário: " << func[i].salario;
+    }
+
+    return 0;
+}
