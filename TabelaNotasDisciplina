@@ -42,21 +42,26 @@ void calcular_media_e_status(Disciplina& disciplina) {
     disciplina.media = (disciplina.notas[0] + disciplina.notas[1] + disciplina.notas[2]) / NUM_NOTAS;
     if (disciplina.media >= 6) {
         disciplina.status = "Aprovado";
-    } else {
+    } else if (disciplina.media >= 4) {
         disciplina.status = "Recuperacao";
+    } else {
+        disciplina.status = "Reprovado";
     }
 }
 
+
 void ler_nota_recuperacao(Disciplina& disciplina, const std::vector<std::string>& listaCabecalho) {
     std::cout << "Estudante em recuperação na disciplina " << disciplina.nome << "." << std::endl;
-    std::cout << "Digite a nota da " << listaCabecalho[NUM_NOTAS + 1] << " da disciplina " << disciplina.nome << ": ";
+    std::cout << "Digite a nota da " << listaCabecalho[NUM_NOTAS+ 2] << " da disciplina " << disciplina.nome << ": ";
     std::cin >> disciplina.notaRecuperacao;
 }
 
 void calcular_media_final_e_status(Disciplina& disciplina) {
-    disciplina.mediaFinal = (disciplina.media + disciplina.notaRecuperacao) / 2;
-    if (disciplina.mediaFinal >= 6) {
+    disciplina.media = (disciplina.notas[0] + disciplina.notas[1] + disciplina.notas[2]) / NUM_NOTAS;
+    if (disciplina.media >= 6) {
         disciplina.status = "Aprovado";
+    } else if (disciplina.media >= 4 && disciplina.media < 6) {
+        disciplina.status = "Recuperacao";
     } else {
         disciplina.status = "Reprovado";
     }
@@ -82,7 +87,6 @@ void imprimir_disciplina(const Disciplina& disciplina) {
 }
 
 int main() {
-	std::locale::global(std::locale("Portuguese"));
     std::vector<std::string> listaCabecalho = {"Disciplina", "P1", "P2", "TR", "MEDIA", "P3", "MEDIA FINAL", "STATUS"};
     std::vector<Disciplina> disciplinas(NUM_DISCIPLINAS);
 
