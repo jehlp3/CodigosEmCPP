@@ -1,0 +1,74 @@
+#include <iostream>
+#include <iomanip>
+#include <vector>
+#include <string>
+
+using namespace std;
+
+const int TAM = 30;
+
+int main() {
+    vector<vector<string>> matriz_dados = {
+        {"Estrutura de Dados", "0", "0", "0", "0", "0", "0", ""},
+        {"Estatística Aplicada", "0", "0", "0", "0", "0", "0", ""},
+        {"Engenharia de Software II", "0", "0", "0", "0", "0", "0", ""}
+    };
+
+    vector<string> lista_cabecalho = {"Disciplina", "P1", "P2", "TR", "MEDIA", "P3", "MEDIA FINAL", "STATUS"};
+
+    for (int i = 0; i < 3; i++) {
+        for (int j = 1; j <= 3; j++) {
+            cout << matriz_dados[i][0] << " - Digite a nota da " << lista_cabecalho[j] << ": ";
+            cin >> matriz_dados[i][j];
+        }
+    }
+
+    cout << endl;
+
+    // Cálculos de médias e determinação de status
+    for (int i = 0; i < 3; i++) {
+        float media = (stof(matriz_dados[i][1]) + stof(matriz_dados[i][2]) + stof(matriz_dados[i][3])) / 3;
+        matriz_dados[i][4] = to_string(media);
+        if (media >= 6) {
+            matriz_dados[i][7] = "Aprovado";
+        } else {
+            matriz_dados[i][7] = "Recuperacao";
+        }
+    }
+
+    for (int i = 0; i < 3; i++) {
+        if (matriz_dados[i][7] == "Recuperacao") {
+            cout << "Estudante em recuperação na disciplina " << matriz_dados[i][0] << "." << endl;
+            cout << "Digite a nota da " << lista_cabecalho[5] << " da disciplina " << matriz_dados[i][0] << ": ";
+            cin >> matriz_dados[i][5];
+            float media_final = (stof(matriz_dados[i][4]) + stof(matriz_dados[i][5])) / 2;
+            matriz_dados[i][6] = to_string(media_final);
+            if (media_final >= 6) {
+                matriz_dados[i][7] = "Aprovado";
+            } else {
+                matriz_dados[i][7] = "Reprovado";
+            }
+        } else {
+            matriz_dados[i][5] = "-";
+            matriz_dados[i][6] = matriz_dados[i][4];
+        }
+    }
+
+    // Imprimindo tabela
+    cout << endl;
+
+    for (int i = 0; i < 8; i++) {
+        cout << "|" << setw(TAM) << lista_cabecalho[i] << "|";
+    }
+
+    cout << endl;
+
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 8; j++) {
+            cout << "|" << setw(TAM) << matriz_dados[i][j] << "|";
+        }
+        cout << endl;
+    }
+
+    return 0;
+}
