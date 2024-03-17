@@ -1,73 +1,112 @@
 #include <iostream>
 #include <iomanip>
 #include <vector>
+#include <sstream>
 #include <string>
+#include <locale>
 
-using namespace std;
+const int NUM_DISCIPLINAS = 3;
+const int NUM_NOTAS = 3;
+const int TAM = 25;
 
-const int TAM = 30;
+struct Disciplina {
+    std::string nome;
+    float notas[NUM_NOTAS];
+    float media;
+    float notaRecuperacao;
+    float mediaFinal;
+    std::string status;
+};
+
+float string_to_float(const std::string& str) {
+    std::istringstream iss(str);
+    float num;
+    iss >> num;
+    return num;
+}
+
+std::string float_to_string(float num) {
+    std::ostringstream oss;
+    oss << num;
+    return oss.str();
+}
+
+void ler_notas(Disciplina& disciplina, const std::vector<std::string>& listaCabecalho) {
+    for (int j = 0; j < NUM_NOTAS; j++) {
+        std::cout << disciplina.nome << " - Digite a nota da " << listaCabecalho[j + 1] << ": ";
+        std::cin >> disciplina.notas[j];
+    }
+}
+
+void calcular_media_e_status(Disciplina& disciplina) {
+    disciplina.media = (disciplina.notas[0] + disciplina.notas[1] + disciplina.notas[2]) / NUM_NOTAS;
+    if (disciplina.media >= 6) {
+        disciplina.status = "Aprovado";
+    } else {
+        disciplina.status = "Recuperacao";
+    }
+}
+
+void ler_nota_recuperacao(Disciplina& disciplina, const std::vector<std::string>& listaCabecalho) {
+    std::cout << "Estudante em recuperação na disciplina " << disciplina.nome << "." << std::endl;
+    std::cout << "Digite a nota da " << listaCabecalho[NUM_NOTAS + 1] << " da disciplina " << disciplina.nome << ": ";
+    std::cin >> disciplina.notaRecuperacao;
+}
+
+void calcular_media_final_e_status(Disciplina& disciplina) {
+    disciplina.mediaFinal = (disciplina.media + disciplina.notaRecuperacao) / 2;
+    if (disciplina.mediaFinal >= 6) {
+        disciplina.status = "Aprovado";
+    } else {
+        disciplina.status = "Reprovado";
+    }
+}
+
+void imprimir_cabecalho(const std::vector<std::string>& listaCabecalho) {
+    for (const std::string& cabecalho : listaCabecalho) {
+        std::cout << "|" << std::setw(TAM) << cabecalho << "|";
+    }
+    std::cout << std::endl;
+}
+
+void imprimir_disciplina(const Disciplina& disciplina) {
+    std::cout << "|" << std::setw(TAM) << disciplina.nome << "|";
+    for (int i = 0; i < NUM_NOTAS; i++) {
+        std::cout << "|" << std::setw(TAM) << disciplina.notas[i] << "|";
+    }
+    std::cout << "|" << std::setw(TAM) << disciplina.media << "|";
+    std::cout << "|" << std::setw(TAM) << disciplina.notaRecuperacao << "|";
+    std::cout << "|" << std::setw(TAM) << disciplina.mediaFinal << "|";
+    std::cout << "|" << std::setw(TAM) << disciplina.status << "|";
+    std::cout << std::endl;
+}
 
 int main() {
-    vector<vector<string>> matriz_dados = {
-        {"Estrutura de Dados", "0", "0", "0", "0", "0", "0", ""},
-        {"Estatística Aplicada", "0", "0", "0", "0", "0", "0", ""},
-        {"Engenharia de Software II", "0", "0", "0", "0", "0", "0", ""}
-    };
+	std::locale::global(std::locale("Portuguese"));
+    std::vector<std::string> listaCabecalho = {"Disciplina", "P1", "P2", "TR", "MEDIA", "P3", "MEDIA FINAL", "STATUS"};
+    std::vector<Disciplina> disciplinas(NUM_DISCIPLINAS);
 
-    vector<string> lista_cabecalho = {"Disciplina", "P1", "P2", "TR", "MEDIA", "P3", "MEDIA FINAL", "STATUS"};
+    disciplinas[0].nome = "Estrutura de Dados";
+    disciplinas[1].nome = "Estatistica Aplicada";
+    disciplinas[2].nome = "Engenharia de Software";
 
-    for (int i = 0; i < 3; i++) {
-        for (int j = 1; j <= 3; j++) {
-            cout << matriz_dados[i][0] << " - Digite a nota da " << lista_cabecalho[j] << ": ";
-            cin >> matriz_dados[i][j];
-        }
-    }
+    for (int i = 0; i < NUM_DISCIPLINAS; i++) {
+        ler_notas(disciplinas[i], listaCabecalho);
+        calcular_media_e_status(disciplinas[i]);
 
-    cout << endl;
-
-    // Cálculos de médias e determinação de status
-    for (int i = 0; i < 3; i++) {
-        float media = (stof(matriz_dados[i][1]) + stof(matriz_dados[i][2]) + stof(matriz_dados[i][3])) / 3;
-        matriz_dados[i][4] = to_string(media);
-        if (media >= 6) {
-            matriz_dados[i][7] = "Aprovado";
+        if (disciplinas[i].status == "Recuperacao") {
+            ler_nota_recuperacao(disciplinas[i], listaCabecalho);
+            calcular_media_final_e_status(disciplinas[i]);
         } else {
-            matriz_dados[i][7] = "Recuperacao";
+            disciplinas[i].notaRecuperacao = -1; 
+            disciplinas[i].mediaFinal = disciplinas[i].media;
         }
     }
 
-    for (int i = 0; i < 3; i++) {
-        if (matriz_dados[i][7] == "Recuperacao") {
-            cout << "Estudante em recuperação na disciplina " << matriz_dados[i][0] << "." << endl;
-            cout << "Digite a nota da " << lista_cabecalho[5] << " da disciplina " << matriz_dados[i][0] << ": ";
-            cin >> matriz_dados[i][5];
-            float media_final = (stof(matriz_dados[i][4]) + stof(matriz_dados[i][5])) / 2;
-            matriz_dados[i][6] = to_string(media_final);
-            if (media_final >= 6) {
-                matriz_dados[i][7] = "Aprovado";
-            } else {
-                matriz_dados[i][7] = "Reprovado";
-            }
-        } else {
-            matriz_dados[i][5] = "-";
-            matriz_dados[i][6] = matriz_dados[i][4];
-        }
-    }
-
-    // Imprimindo tabela
-    cout << endl;
-
-    for (int i = 0; i < 8; i++) {
-        cout << "|" << setw(TAM) << lista_cabecalho[i] << "|";
-    }
-
-    cout << endl;
-
-    for (int i = 0; i < 3; i++) {
-        for (int j = 0; j < 8; j++) {
-            cout << "|" << setw(TAM) << matriz_dados[i][j] << "|";
-        }
-        cout << endl;
+    std::cout << std::endl;
+    imprimir_cabecalho(listaCabecalho);
+    for (int i = 0; i < NUM_DISCIPLINAS; i++) {
+        imprimir_disciplina(disciplinas[i]);
     }
 
     return 0;
