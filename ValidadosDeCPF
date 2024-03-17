@@ -1,0 +1,80 @@
+#include <iostream>
+#include <vector>
+#include <string>
+
+using namespace std;
+
+int main() {
+
+    cout << "Digite um CPF para ser validado >>> ";
+    string novo_cpf_str;
+    cin >> novo_cpf_str;
+
+    vector<int> novo_cpf_int;
+
+    for (char item : novo_cpf_str) {
+        try {
+            int valor_int = item - '0';
+            novo_cpf_int.push_back(valor_int);
+        } catch (const std::invalid_argument& e) {
+            continue;
+        }
+    }
+
+    int tamanho = novo_cpf_int.size();
+
+    vector<int> lista_aux1 = {10, 9, 8, 7, 6, 5, 4, 3, 2};
+    vector<int> lista_aux2 = {11, 10, 9, 8, 7, 6, 5, 4, 3, 2};
+
+    int soma1 = 0, soma2 = 0;
+    for (int i = 0; i < 9; i++) {
+        soma1 += novo_cpf_int[i] * lista_aux1[i];
+        soma2 += novo_cpf_int[i] * lista_aux2[i];
+    }
+
+    int resto1 = soma1 % 11;
+    int resto2 = soma2 % 11;
+
+    int dig1 = (resto1 < 2) ? 0 : 11 - resto1;
+    int dig2 = (resto2 < 2) ? 0 : 11 - resto2;
+
+    if (dig1 == novo_cpf_int[9] && dig2 == novo_cpf_int[10] && tamanho == 11) {
+        cout << "\nCPF Válido" << endl;
+        switch (novo_cpf_int[8]) {
+            case 0:
+                cout << "Seu CPF é de origem do estado do Rio Grande do Sul" << endl;
+                break;
+            case 1:
+                cout << "Seu CPF é originário do estado do Distrito Federal, Goiás, Mato Grosso do Sul ou Tocantins" << endl;
+                break;
+            case 2:
+                cout << "Seu CPF é originário do estado do Pará, Amazonas, Acre, Amapá, Rondônia ou Roraima" << endl;
+                break;
+            case 3:
+                cout << "Seu CPF é originário do estado do Ceará, Maranhão ou Piauí" << endl;
+                break;
+            case 4:
+                cout << "Seu CPF é originário do estado de Pernambuco, Rio Grande do Norte, Paraíba ou Alagoas" << endl;
+                break;
+            case 5:
+                cout << "Seu CPF é originário do estado da Bahia; e Sergipe" << endl;
+                break;
+            case 6:
+                cout << "Seu CPF é originário de Minas Gerais" << endl;
+                break;
+            case 7:
+                cout << "Seu CPF é originário do estado do Rio de Janeiro ou Espírito Santo" << endl;
+                break;
+            case 8:
+                cout << "Seu CPF é originário do estado de São Paulo" << endl;
+                break;
+            case 9:
+                cout << "Seu CPF é originário do estado do Paraná ou Santa Catarina" << endl;
+                break;
+        }
+    } else {
+        cout << "\nCPF inválido" << endl;
+    }
+
+    return 0;
+}
