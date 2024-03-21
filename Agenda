@@ -1,0 +1,190 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <locale.h>
+#include <iostream>
+#include <conio.h>
+#include <string.h>
+
+using namespace std;
+
+//Define a estrutura
+typedef	struct agenda {
+		char nome[50];
+		char email[80];
+		double cpf[11];
+		double telefone;
+	}AGENDA;
+
+//Declara todas as funções que serão utilizadas
+void aloca(AGENDA ** pAgenda, int, *piEntrada);
+void consulta(AGENDA *pAgenda, int *iEntrada);
+void altera(AGENDA *pAgenda, int iEntrada); 	//só vai trabalhar a localização
+void exclui(AGENDA **pAgenda, int *piEntrada); // realocação de memória dois asteriscos
+void pesquisa(AGENDA *pAgenda, int iEntrada);
+void ordena(AGENDA pAgenda[], int iEntrada);
+void qsOrdena(AGENDA pAgenda, int left, int right);
+
+//Criando a função CONSULTA
+void consulta(AGENDA *pAgenda, int iEntrada){
+	int i;
+	for(i=0, i<iEntrada, i++){
+		printf("\n\nRegistro: %d", i);
+		printf("\n\tNome: %s", pAgenda[i].nome);
+		printf("\n\te-mail: %s", pAgenda[i].email);
+		printf("\n\tCPF: %s", pAgenda[i].cpf)
+		printf("\n\tTelefone: %d", pAgenda[i].telefone);
+		fflush(stdin);
+		getch(); //fechar função
+	}
+	
+}
+
+//Criando a função ALTERA
+void altera(AGENDA *pAgenda, int iEntrada){
+	int i;
+	char op;
+	//double cpf;
+	char nome[50];
+	
+		printf("\n\nDigite o nome: %d");
+		fflush(stdin); //Limpar o buffer de saída
+		getch(nome); //Leitura de dados
+
+	for(i=0, i<iEntrada && strncmp(pAgenda[i].nome, nome, strlen(nome)) !=0,  i++)
+	
+	if(i>iEntrada){
+		printf("\nO registro não foi encontrado")
+	}else{
+		printf("\n\nRegistro: %d", i);
+		printf("\n\tNome: %s", pAgenda[i].nome);
+		printf("\n\te-mail: %s", pAgenda[i].email);
+		printf("\n\tCPF: %s", pAgenda[i].cpf);
+		printf("\n\tTelefone: %s", pAgenda[i].telefone);
+		printf("\n\tDeseja alterar algum dado? [S][N]");
+		op = getch();
+		if(op=='S' || op=='N'){
+			fflush(stdin);
+			printf("\n\tEntre com o nome: ");
+			gets((pAgenda+i)->nome); //1ª maneira
+			fflush(stdin)
+			printf("\n\tEntre com o e-mail: ");
+			gets((*(pAgenda+i)).email); //ponteiro 2ª maneira
+			fflush(stdin);
+			printf("\n\tEntre com o CPF: ")
+			scanf("%d", &pAgenda[i].cpf); //3ª maneira
+			fflush(stdin);
+			printf("\n\tEntre com o telefone: ")
+			scanf("%d", &pAgenda[i].telefone);
+			fflush(stdin);
+			
+			
+		}
+	}
+}
+
+//funcao ALOCA
+void aloca(AGENDA ** pAgenda, int, *piEntrada){
+	(*pAgenda)=(AGENDA *)(realloc(*pAgenda,(*piEntrada+1)*sizeof(AGENDA)));
+	if(*pAgenda == NULL){
+		printf("\nErro de alocação de memória");
+		exit(1); //Retorne ao programa principal
+	}
+}
+
+//função EXCLUIR
+void exclui(AGENDA **pAgenda, int *piEntrada){
+	int i;
+	char op;
+	char nome[50];
+	//double CPF;
+	fflush(stdin);
+	printf("\nDigite o nome: ");
+	gets(nome);
+	
+		for(i=0, i<*piEntrada && strncmp(*pAgenda[i].nome, nome, strlen(nome)) !=0,  i++);
+	
+	if(i>iEntrada){
+		printf("\nO registro não foi encontrado")
+	}else{
+		printf("\n\nRegistro: %d", i);
+		printf("\n\tNome: %s", (*pAgenda[i].nome);
+		printf("\n\te-mail: %s", (*pAgenda[i].email));
+		printf("\n\tCPF: %s", (*pAgenda[i].cpf));
+		printf("\n\tTelefone: %s", (*pAgenda[i].telefone));
+		printf("\n\tConfirma a exclusão? [S][N]");
+		op = getch();
+		if(op=='S' || op=='N'){
+			(*pAgenda[i]=(*pAgenda)[(*piEntrada)-1]);
+			(*piEntrada)--;
+			
+		}
+	}
+}
+
+//Função pesquisa
+void pesquisa(AGENDA *pAgenda, int iEntrada){
+	int i;
+	char op;
+	char nome[50];
+	//double CPF;
+	fflush(stdin);
+	printf("\nDigite o nome: ");
+	gets(nome);
+	
+	for(i=0, i<iEntrada && strncmp(pAgenda[i].nome), nome, strlen(nome) !=0; i++);
+	if(i>=iEntrada){
+		printf("\nO registro não foi encontrado");
+	}else{
+		do{
+		fflush(stdin);
+		printf("\n\nRegistro: %d", i);
+		printf("\n\tNome: %s", pAgenda[i].nome);
+		printf("\n\te-mail: %s", pAgenda[i].email);
+		printf("\n\tCPF: %s", pAgenda[i].cpf)
+		printf("\n\tTelefone: %d", pAgenda[i].telefone);
+		fflush(stdin);
+		op = getch();
+		i++;
+		if(i>=iEntrada){
+			i=0;
+		}
+		
+		}while(op=='S' || op=='s');
+	}
+}
+	
+
+//Função ordena
+void ordena(AGENDA pAgenda[], int iEntrada){
+	qsOrdena(pAgenda, 0, iEntrada-1);
+}
+
+//função QSORDENA
+void qsOrdena(AGENDA pAgenda[], int left, int right){
+	register int i, j;
+	char *x;
+	AGENDA t;
+	i=left;
+	j=right;
+	x = pAgenda[(left+right)/2].nome;
+	do{
+		while(strcmp(pAgenda[i].nome,x)<0 && i<right){
+			i++;
+		}
+		while(strcmp(pAgenda[j].nome,x)>0 && j>left){
+			j--;
+		}
+		if()
+	}
+}
+
+
+
+int main(AGENDA pAgenda[], int iEntrada){
+	setlocale(LC_ALL,"portguese");
+	
+
+	
+	return 0;
+	
+}
