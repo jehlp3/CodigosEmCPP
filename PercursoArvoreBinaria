@@ -1,0 +1,166 @@
+//Árvore binária com operções no menu
+#include<stdio.h>
+#include<stdlib.h>
+#define true 1
+#define false 0
+ 
+struct arvore{
+	int a;
+	struct arvore *n, *e, *d;
+};
+ 
+typedef struct arvore no;
+ 
+//Definição de variáveis
+no *raiz, *num, *p, *atual, *busca;
+int i=0, aux=0;
+ 
+void inserir(int n);
+void pCentral(no *pr);
+void pPos(no *pr);
+void pPre(no *pr);
+void pesquisar(int n);
+ 
+void inserir(int n){
+	num = (no*)malloc(sizeof(no));
+	num->d = NULL;
+	num->e = NULL;
+	num->n = NULL;
+	i++;
+	num->a = n;
+	if(raiz == NULL){
+		raiz = num;
+	}else{
+		atual = raiz;
+		while(true){
+			//Iniciar a estrutura de repetição
+			if(num->a >= atual->a){
+				//Insere na SAD
+				if(atual->d == NULL){
+					atual->d = num;
+					num->n = atual;
+					break;
+				}else{
+					atual=atual->d;
+				}
+			}
+			if(num->a < atual->a){
+				//Insere na SAE
+				if(atual->e == NULL){
+					atual->e = num;
+					num->n = atual;
+					break;
+				}else{
+					atual=atual->e;
+				}
+			}
+		}
+	}
+
+}
+
+
+void pesquisar(int n){
+	if(raiz == NULL){
+		system("pause");
+	}
+	int vBusca = n;
+	busca = raiz;
+	printf("Percurso de busca: ");
+	while(true){
+		if(busca == NULL){
+			printf("Valor nao encontrado! \n");
+			system("pause");
+			break;
+		}
+		if(busca->a == vBusca){
+			printf("%d\n",busca->a);
+			break;
+		}else{
+			printf("%d ", busca->a);
+			//Verificando para qual SAE/SAD irá percorrer
+			if(vBusca > busca->a){
+				busca = busca->d;
+			}else{
+				busca = busca->e;
+			}
+		}
+	}
+}
+void pCentral(no *pr){
+	if(pr != NULL){
+		pCentral(pr->e);
+		printf("%d ", pr->a);
+		pCentral(pr->d);
+	}
+}
+ 
+void pPos(no *pr){
+	if(pr != NULL){
+		pPos(pr->e);
+		pPos(pr->d);
+		printf("%d ", pr->a);
+	}
+}
+ 
+void pPre(no *pr){
+	if(pr != NULL){
+		printf("%d ", pr->a);
+		pPre(pr->e);
+		pPre(pr->d);
+	}
+}
+
+int main(){
+ 
+	raiz = NULL;
+	int info, opc, r, m;
+	do{
+		system("cls");
+		printf("Operacoes da arvore binaria\n");
+		printf("\n");
+		printf("[1] Inserir\n[2] Pesquisar\n[3] Percurso central\n");
+		printf("[4] Percurso pos fixado\n[5] Percurso pre fixado\n");
+		printf("[10] Sair\n");
+		printf("Digite a operacao desejada <- ");
+		scanf("%d", &opc);
+		switch(opc){
+			case 1:
+				printf("Digite o numero a ser inserido na arvore\n");
+				scanf("%d", &info);
+				inserir(info);
+				system("pause");
+				break;
+			case 2:
+				printf("Digite o numero a ser pesquisado na arvore\n");
+				scanf("%d", &info);
+				pesquisar(info); 
+                             system("pause");
+				break;
+			case 3: 
+				printf("Percurso Central \n");
+				pCentral(raiz);
+				printf("\n");
+                             system("pause");
+				break;
+			case 4: 
+				printf("Percurso Pos Fixado \n");
+				pPos(raiz);
+				printf("\n");
+                             system("pause");
+				break;
+			case 5: 
+				printf("Percurso Pre Fixado \n");
+				pPre(raiz);
+				printf("\n");
+                             system("pause");
+				break;
+			case 10: 
+				system("exit");
+				break;
+			default:
+				printf("Opcao invalida!\n");
+				system("pause");
+		}
+	}while(opc != 10);
+}
